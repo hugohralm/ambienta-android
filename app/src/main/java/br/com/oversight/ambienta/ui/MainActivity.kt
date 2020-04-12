@@ -1,4 +1,4 @@
-package br.com.oversight.ambienta
+package br.com.oversight.ambienta.ui
 
 import android.os.Bundle
 import android.view.Menu
@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import br.com.oversight.ambienta.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,7 +36,10 @@ class MainActivity : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow), drawerLayout)
+            R.id.nav_home,
+            R.id.nav_gallery,
+            R.id.nav_slideshow
+        ), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }

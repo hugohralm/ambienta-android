@@ -1,6 +1,6 @@
 package br.com.oversight.ambienta.model
 
-class DenunciaResponse {
+class Denuncia {
     var id: Int? = null
     var email: String? = null
     var titulo: String? = null

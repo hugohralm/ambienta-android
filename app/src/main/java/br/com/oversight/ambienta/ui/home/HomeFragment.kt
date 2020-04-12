@@ -9,10 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import br.com.oversight.ambienta.R
-import br.com.oversight.ambienta.model.DenunciaResponse
+import br.com.oversight.ambienta.model.Denuncia
 import br.com.oversight.ambienta.utils.extensions.makeToast
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.nav_header_main.*
 
 class HomeFragment : Fragment(), HomeView {
 
@@ -38,7 +37,7 @@ class HomeFragment : Fragment(), HomeView {
         id.let {
             homeViewModel.getById(id).observe(this, Observer { response ->
                 response.let { resp ->
-                    val denuncia = Gson().fromJson(resp, DenunciaResponse::class.java)
+                    val denuncia = Gson().fromJson(resp, Denuncia::class.java)
                     activity!!.makeToast(denuncia.titulo!!)
                 }
             })
