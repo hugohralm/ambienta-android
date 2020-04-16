@@ -76,7 +76,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideConfigApi(retrofit: Retrofit): DenunciaService {
+    fun provideDenunciaService(retrofit: Retrofit): DenunciaService {
         return retrofit.create(DenunciaService::class.java)
     }
 

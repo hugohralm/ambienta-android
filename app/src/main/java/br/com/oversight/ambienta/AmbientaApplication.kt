@@ -9,6 +9,7 @@ import com.orhanobut.hawk.Hawk
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
+import timber.log.Timber
 import javax.inject.Inject
 
 class AmbientaApplication : MultiDexApplication(), HasAndroidInjector {
@@ -19,6 +20,9 @@ class AmbientaApplication : MultiDexApplication(), HasAndroidInjector {
     override fun onCreate() {
         super.onCreate()
         Hawk.init(this).build()
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
         Coil.setDefaultImageLoader(ImageLoader(applicationContext){
             crossfade(true)
         })

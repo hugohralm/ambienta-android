@@ -35,7 +35,7 @@ object Converter {
     }
 
     @JvmStatic
-    fun dateToDateBrFormat(date: Date): String = date.toDateBrFormat()
+    fun dateToDateBrFormat(date: Date?): String = date?.toDateBrFormat()?: ""
 
     @JvmStatic
     fun dateToPattern(date: Date, pattern: String): String = SimpleDateFormat(pattern).format(date)

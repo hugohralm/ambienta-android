@@ -4,6 +4,8 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Html
+import android.text.SpannableStringBuilder
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -11,13 +13,17 @@ import android.widget.RadioButton
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
+import androidx.databinding.InverseBindingAdapter
+import androidx.databinding.InverseBindingListener
 import coil.api.load
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.redmadrobot.inputmask.helper.AffinityCalculationStrategy
+import java.lang.ref.WeakReference
 
 
 @BindingAdapter(value = ["mascara", "mascaraSecundaria"], requireAll = false)
 fun applyMask(view: EditText, mascara: String, mascaraSecundaria: String?) {
+    Log.d("ATENTION!!!", "APPLY CALLED!!!!!!!!!!!!")
     if (mascaraSecundaria != null) {
         MaskedTextChangedListener.installOn(
             view,
@@ -79,4 +85,3 @@ fun hideView(view: View, hide: Boolean) {
 fun check(view: RadioButton, check: Boolean) {
     view.isChecked = check
 }
-

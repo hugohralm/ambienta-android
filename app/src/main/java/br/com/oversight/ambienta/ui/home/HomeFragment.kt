@@ -8,47 +8,41 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import br.com.oversight.ambienta.R
+import br.com.oversight.ambienta.databinding.FragmentHomeBinding
+import br.com.oversight.ambienta.di.BaseFragment
+import br.com.oversight.ambienta.di.RequiresViewModel
 import br.com.oversight.ambienta.model.Denuncia
 import br.com.oversight.ambienta.utils.extensions.makeToast
 import com.google.gson.Gson
 
-class HomeFragment : Fragment(), HomeView {
+@RequiresViewModel(HomeViewModel::class)
+class HomeFragment : BaseFragment<HomeViewModel>() {
 
-    private lateinit var homeViewModel: HomeViewModel
-
+    lateinit var binding: FragmentHomeBinding
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val textView: TextView = root.findViewById(R.id.text_home)
-        homeViewModel.setProtocol(this)
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        getById("2")
-        return root
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    private fun getById(id: String) {
-        id.let {
-            homeViewModel.getById(id).observe(this, Observer { response ->
-                response.let { resp ->
-                    val denuncia = Gson().fromJson(resp, Denuncia::class.java)
-                    activity!!.makeToast(denuncia.titulo!!)
-                }
-            })
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        binding.floatingActionButton.setOnClickListener {
+            findNavController().navigate(HomeFragmentDirections.actionNavHomeToPickLocationFragment())
         }
     }
 
-    override fun responseError(error: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-}
+    override fun bindViewModel(viewModel: HomeViewModel) {
+        binding.apply {
+            vm = viewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
 
-interface HomeView {
-    fun responseError(error: String)
+    }
 }

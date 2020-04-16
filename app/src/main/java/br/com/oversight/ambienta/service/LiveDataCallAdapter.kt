@@ -9,8 +9,7 @@ import java.lang.reflect.Type
 import java.util.concurrent.atomic.AtomicBoolean
 
 class LiveDataCallAdapter<R : Any>(
-    private val responseType: Type,
-    private val retrofit: Retrofit
+    private val responseType: Type
 ) :
     CallAdapter<R, LiveData<ApiResult<R>>> {
 
@@ -22,27 +21,27 @@ class LiveDataCallAdapter<R : Any>(
                 super.onActive()
                 if (started.compareAndSet(false, true)) {
 
-                    postValue(ApiResult.Loading)
+                    postValue(ApiResult.loading())
 
                     call.enqueue(object : Callback<R> {
                         override fun onResponse(call: Call<R>, response: Response<R>) {
                             if (call.isCanceled) return
 
                             if (response.isSuccessful) {
-                                postValue(ApiResult.Success(response.body() as R))
+                                postValue(ApiResult.success(response.body()))
                             } else {
-                                if(response.code() != 502){
+                                if (response.code() != 502) {
                                     val jObjError = JSONObject(response.errorBody()?.string())
-                                    postValue(ApiResult.Error(jObjError.getString("message")))
-                                }else{
-                                    postValue(ApiResult.Error("Serviço indisponível.\\nPor favor, volte mais tarde."))
+                                    postValue(ApiResult.apiError(jObjError.getString("message")?: "Erro inesperado."))
+                                } else {
+                                    postValue(ApiResult.apiError("Serviço indisponível.\\nPor favor, volte mais tarde."))
                                 }
                             }
                         }
 
                         override fun onFailure(call: Call<R>, t: Throwable) {
                             if (call.isCanceled) return
-                            postValue(ApiResult.Error(t.message?: "Erro desconhecido"))
+                            postValue(ApiResult.apiError(t.message ?: "Erro desconhecido"))
                         }
                     })
                 }
