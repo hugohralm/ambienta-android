@@ -1,7 +1,6 @@
 package br.com.oversight.ambienta.ui.novaDenuncia
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
@@ -16,15 +15,11 @@ import br.com.oversight.ambienta.databinding.FragmentNovaDenunciaBinding
 import br.com.oversight.ambienta.di.BaseFragment
 import br.com.oversight.ambienta.di.RequiresViewModel
 import br.com.oversight.ambienta.model.CategoriaDenuncia
-import br.com.oversight.ambienta.model.Municipio
 import br.com.oversight.ambienta.service.ApiResult
-import br.com.oversight.ambienta.ui.home.HomeFragmentDirections
 import br.com.oversight.ambienta.utils.extensions.hideKeyboard
-import br.com.oversight.ambienta.utils.extensions.log
 import br.com.oversight.ambienta.utils.extensions.showSnack
 import br.com.oversight.ambienta.utils.extensions.toDateBrFormat
 import com.google.android.material.datepicker.MaterialDatePicker
-import java.text.SimpleDateFormat
 import java.util.*
 
 @RequiresViewModel(NovaDenunciaViewModel::class)
@@ -80,6 +75,10 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
             lifecycleOwner = viewLifecycleOwner
             vm = viewModel
         }
+
+        viewModel.isDenunciaAnonima.observe(this, Observer {
+            binding.wrapDenunciante.visibility = if (it) View.GONE else View.VISIBLE
+        })
 
         viewModel.categoriaDenunciaList.observe(this, Observer {
             when (it.status) {

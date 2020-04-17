@@ -10,6 +10,10 @@ import javax.inject.Inject
 
 class NovaDenunciaViewModel @Inject constructor(private val denunciaRepository: DenunciaRepository) :
     ViewModel() {
+    val isDenunciaAnonima: MutableLiveData<Boolean> = MutableLiveData<Boolean>().also {
+        it.value = false
+    }
+
     val denuncia: MutableLiveData<Denuncia> = MutableLiveData<Denuncia>().also {
         it.value = Denuncia()
     }

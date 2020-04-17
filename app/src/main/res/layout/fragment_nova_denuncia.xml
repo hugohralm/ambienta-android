@@ -51,86 +51,101 @@
                 hideView="@{vm.requestDenuncia.statusLoading}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
                 android:orientation="vertical"
                 android:paddingLeft="16dp"
                 android:paddingTop="8dp"
                 android:paddingRight="16dp">
 
-                <com.google.android.material.textview.MaterialTextView
-                    style="@style/headerFields"
+                <com.google.android.material.checkbox.MaterialCheckBox
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Dados do denúnciante" />
+                    android:checked="@={vm.isDenunciaAnonima}"
+                    android:text="Denúncia anonima"/>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/TextInputLayout.Default"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/wrap_denunciante"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:hint="Nome *">
+                    android:orientation="vertical">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <com.google.android.material.textview.MaterialTextView
+                        style="@style/headerFields"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:imeOptions="actionNext"
-                        android:inputType="textPersonName"
-                        android:text="@={vm.denuncia.nomeDenunciante}" />
+                        android:text="Dados do denúnciante" />
 
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/TextInputLayout.Default"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:hint="CPF *">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        mascara='@{"[000].[000].[000]-[00]"}'
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/TextInputLayout.Default"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:digits="0123456789.-"
-                        android:imeOptions="actionNext"
-                        android:inputType="number"
-                        android:text="@={vm.denuncia.cpfDenunciante}" />
+                        android:layout_marginBottom="8dp"
+                        android:hint="Nome *">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:inputType="textPersonName"
+                            android:text="@={vm.denuncia.nomeDenunciante}" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/TextInputLayout.Default"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:hint="Telefone *">
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        mascara='@{"([00]) [00000]-[0000]"}'
-                        mascaraSecundaria='@{"([00]) [0000]-[0000]"}'
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/TextInputLayout.Default"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:digits="0123456789.-() "
-                        android:imeOptions="actionNext"
-                        android:inputType="phone"
-                        android:text="@={vm.denuncia.telefoneDenunciante}" />
+                        android:layout_marginBottom="8dp"
+                        android:hint="CPF *">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            mascara='@{"[000].[000].[000]-[00]"}'
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:digits="0123456789.-"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:text="@={vm.denuncia.cpfDenunciante}" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/TextInputLayout.Default"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:hint="E-mail *">
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/TextInputLayout.Default"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:imeOptions="actionNext"
-                        android:inputType="textEmailAddress"
-                        android:text="@={vm.denuncia.emailDenunciante}" />
+                        android:layout_marginBottom="8dp"
+                        android:hint="Telefone *">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            mascara='@{"([00]) [00000]-[0000]"}'
+                            mascaraSecundaria='@{"([00]) [0000]-[0000]"}'
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:digits="0123456789.-() "
+                            android:imeOptions="actionNext"
+                            android:inputType="phone"
+                            android:text="@={vm.denuncia.telefoneDenunciante}" />
 
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/TextInputLayout.Default"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:hint="E-mail *">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:inputType="textEmailAddress"
+                            android:text="@={vm.denuncia.emailDenunciante}" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <com.google.android.material.textview.MaterialTextView
                     style="@style/headerFields"
