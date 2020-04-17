@@ -86,6 +86,10 @@
 
     <style name="InputLayout.Default.ExposedDropDown" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:textSize">18sp</item>
+        <item name="boxCornerRadiusTopStart">@dimen/radiusComponents</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radiusComponents</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radiusComponents</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radiusComponents</item>
         <item name="boxStrokeColor">@color/text_input_state_list</item>
         <item name="android:textColorHint">@color/text_input_state_list</item>
         <item name="hintTextColor">@color/text_input_state_list</item>

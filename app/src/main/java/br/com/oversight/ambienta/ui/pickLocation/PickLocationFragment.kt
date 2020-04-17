@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import br.com.oversight.ambienta.R
 import br.com.oversight.ambienta.databinding.FragmentPickLocationBinding
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -55,9 +56,9 @@ class PickLocationFragment : Fragment(), OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
         fetchLocationWithPermissionCheck()
         binding.confirm.setOnClickListener {
-            PickLocationFragmentDirections.actionPickLocationFragmentToNovaDenunciaFragment(
-                targetLocation!!
-            )
+           findNavController().navigate( PickLocationFragmentDirections.actionPickLocationFragmentToNovaDenunciaFragment(
+               targetLocation!!
+           ))
         }
     }
 

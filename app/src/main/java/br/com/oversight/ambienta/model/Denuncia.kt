@@ -1,5 +1,6 @@
 package br.com.oversight.ambienta.model
 
+import br.com.oversight.ambienta.utils.extensions.clearSpecialCharacters
 import java.util.*
 
 data class Denuncia(
@@ -14,12 +15,20 @@ data class Denuncia(
     var telefoneDenunciante: String? = null,//
 
     var nomeDenunciado: String? = null,
+    var cpfDenunciado: String? = null,
 
-    var categoriaDenuncia: CategoriaDenuncia? = null,
-    var dataCadastro: Date? = null,
+    var categoria: CategoriaDenuncia? = null,
     var dataOcorrido: Date? = null,
-    var descricao: String? = "",//
+    var descricao: String? = "",
     var latitude: Double? = null,
     var longitude: Double? = null,
     var municipio: Municipio? = null
-)
+){
+
+    fun clearMask(): Denuncia {
+        val denuncia = this.copy()
+        denuncia.cpfDenunciante = cpfDenunciante?.clearSpecialCharacters()
+        denuncia.cpfDenunciado = cpfDenunciado?.clearSpecialCharacters()
+        return denuncia
+    }
+}

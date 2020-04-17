@@ -1,7 +1,6 @@
 package br.com.oversight.ambienta.utils.extensions
 
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -9,9 +8,6 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
-import br.com.oversight.ambienta.ui.MainActivity
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
@@ -58,4 +54,8 @@ fun Date.toCalendar(): Calendar {
 
 fun Fragment.log(string: String){
     Log.d(this.TAG, string)
+}
+
+fun String.clearSpecialCharacters(): String {
+    return this.replace("[^A-Za-z0-9 ]".toRegex(), "")
 }

@@ -30,6 +30,10 @@
             android:id="@+id/action_pickLocationFragment_to_novaDenunciaFragment"
             app:destination="@id/novaDenunciaFragment" />
     </fragment>
+    <action
+        android:id="@+id/action_global_nav_home"
+        app:destination="@id/nav_home"
+        app:popUpTo="@id/nav_home" />
 
 
 </navigation>
