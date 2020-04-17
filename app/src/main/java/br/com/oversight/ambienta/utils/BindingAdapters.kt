@@ -4,21 +4,19 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Html
-import android.text.SpannableStringBuilder
 import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.core.widget.ContentLoadingProgressBar
 import androidx.databinding.BindingAdapter
-import androidx.databinding.InverseBindingAdapter
-import androidx.databinding.InverseBindingListener
 import coil.api.load
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.redmadrobot.inputmask.helper.AffinityCalculationStrategy
-import java.lang.ref.WeakReference
 
 
 @BindingAdapter(value = ["mascara", "mascaraSecundaria"], requireAll = false)
@@ -55,8 +53,8 @@ fun imageFromRes(view: ImageView,@DrawableRes id: Int) {
     view.setImageResource(id)
 }
 
-@BindingAdapter(value = ["obsTextColor", "defaultColor"], requireAll = false)
-fun setColor(view: TextView, textColor: String?, defaultColor: Int) {
+@BindingAdapter(value = ["obsTextColor", "defaultTextColor"], requireAll = false)
+fun setTextColor(view: TextView, textColor: String?, defaultColor: Int) {
     if (textColor != null) view.setTextColor(Color.parseColor(textColor))
     else view.setTextColor(defaultColor)
 }
@@ -68,12 +66,12 @@ fun showView(view: View, show: Boolean) {
 
 @BindingAdapter("showViewIfFalseInvisible")
 fun showViewIfFalseInvisible(view: View, show: Boolean) {
-    view.visibility = if (show) View.VISIBLE else View.GONE
+    view.visibility = if (show) View.VISIBLE else View.INVISIBLE
 }
 
 @BindingAdapter("showProgress")
-fun showProgress(view: View, show: Boolean) {
-    view.visibility = if (show) View.VISIBLE else View.GONE
+fun showProgress(view: ContentLoadingProgressBar, show: Boolean) {
+    if (show) view.show() else view.hide()
 }
 
 @BindingAdapter("hideView")

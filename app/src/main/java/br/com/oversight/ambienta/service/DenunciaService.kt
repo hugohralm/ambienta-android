@@ -11,8 +11,8 @@ import retrofit2.http.Path
 
 interface DenunciaService {
 
-    @GET("api/denuncias/{id}")
-    fun getById(@Path("id") id: Int): LiveData<ApiResult<Denuncia>>
+    @GET("api/denuncias")
+    fun getAll(): LiveData<ApiResult<List<Denuncia>>>
 
     @POST("api/denuncias")
     fun create(@Body denuncia: Denuncia): LiveData<ApiResult<Denuncia>>

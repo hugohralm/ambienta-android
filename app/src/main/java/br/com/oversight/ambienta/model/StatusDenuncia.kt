@@ -1,6 +1,9 @@
 package br.com.oversight.ambienta.model
 
-enum class StatusDenuncia {
-    AGUARDANDO_ANALISE,
-    RECEBIDA
+import androidx.annotation.ColorRes
+import br.com.oversight.ambienta.R
+
+enum class StatusDenuncia(val nome: String, val color:String) {
+    AGUARDANDO_ANALISE("Aguardando Análise", "#103FD8"),
+    RECEBIDA("Recebida pelo órgão", "#10C128");
 }

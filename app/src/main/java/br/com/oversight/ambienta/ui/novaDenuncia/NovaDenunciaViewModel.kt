@@ -1,12 +1,11 @@
 package br.com.oversight.ambienta.ui.novaDenuncia
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.oversight.ambienta.model.CategoriaDenuncia
 import br.com.oversight.ambienta.model.Denuncia
 import br.com.oversight.ambienta.service.ApiResult
-import br.com.oversight.ambienta.service.repository.DenunciaRepository
+import br.com.oversight.ambienta.service.DenunciaRepository
 import javax.inject.Inject
 
 class NovaDenunciaViewModel @Inject constructor(private val denunciaRepository: DenunciaRepository) :

@@ -1,4 +1,4 @@
-package br.com.oversight.ambienta.service.repository
+package br.com.oversight.ambienta.service
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,14 +9,15 @@ import br.com.oversight.ambienta.service.DenunciaService
 import javax.inject.Inject
 
 class DenunciaRepository @Inject constructor(private val denunciaService: DenunciaService) {
-    fun getById(id: Int) : LiveData<ApiResult<Denuncia>> {
-        return denunciaService.getById(id)
-    }
     fun create(denuncia: Denuncia): LiveData<ApiResult<Denuncia>> {
         return denunciaService.create(denuncia)
     }
 
-    fun listarCategorias() : LiveData<ApiResult<List<CategoriaDenuncia>>> {
+    fun listarCategorias(): LiveData<ApiResult<List<CategoriaDenuncia>>> {
         return denunciaService.getCategoriasDenuncia()
+    }
+
+    fun listarDenuncias(): LiveData<ApiResult<List<Denuncia>>> {
+        return denunciaService.getAll();
     }
 }
