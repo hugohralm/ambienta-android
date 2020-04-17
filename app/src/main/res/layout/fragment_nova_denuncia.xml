@@ -58,6 +58,7 @@
                 android:paddingRight="16dp">
 
                 <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/denuncia_anonima_check"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="@={vm.isDenunciaAnonima}"
@@ -92,6 +93,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/input_cpf"
                         style="@style/TextInputLayout.Default"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

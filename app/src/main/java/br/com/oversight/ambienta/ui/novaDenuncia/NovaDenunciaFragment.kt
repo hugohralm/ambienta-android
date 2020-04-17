@@ -1,6 +1,7 @@
 package br.com.oversight.ambienta.ui.novaDenuncia
 
 import android.os.Bundle
+import android.os.Parcel
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
@@ -16,10 +17,15 @@ import br.com.oversight.ambienta.di.BaseFragment
 import br.com.oversight.ambienta.di.RequiresViewModel
 import br.com.oversight.ambienta.model.CategoriaDenuncia
 import br.com.oversight.ambienta.service.ApiResult
+import br.com.oversight.ambienta.utils.Validations
 import br.com.oversight.ambienta.utils.extensions.hideKeyboard
 import br.com.oversight.ambienta.utils.extensions.showSnack
 import br.com.oversight.ambienta.utils.extensions.toDateBrFormat
+import br.com.oversight.ambienta.utils.extensions.toDateBrFormatWithHour
+import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.wajahatkarim3.easyvalidation.core.view_ktx.nonEmpty
+import timber.log.Timber
 import java.util.*
 
 @RequiresViewModel(NovaDenunciaViewModel::class)
@@ -43,10 +49,18 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
             latitude = args.latLng.latitude
             longitude = args.latLng.longitude
         }
-        this.datePicker =
-            MaterialDatePicker.Builder.datePicker().setTitleText("Data do ocorrido").build()
+        this.datePicker = MaterialDatePicker.Builder.datePicker()
+            .setCalendarConstraints(CalendarConstraints.Builder().setValidator(object :
+                CalendarConstraints.DateValidator {
+                override fun writeToParcel(dest: Parcel?, flags: Int) {}
+                override fun isValid(date: Long): Boolean = (date < Calendar.getInstance().timeInMillis)
+                override fun describeContents(): Int = 0
+
+            }).setEnd(Calendar.getInstance().timeInMillis).build()).setTitleText("Data do ocorrido")
+            .build()
         this.datePicker.addOnPositiveButtonClickListener {
-            val calendar = Calendar.getInstance()
+            val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+            Timber.i(calendar.time.toDateBrFormatWithHour())
             calendar.timeInMillis = it
             calendar.add(Calendar.DAY_OF_YEAR, 1)
             viewModel!!.denuncia.value?.dataOcorrido = calendar.time
@@ -66,7 +80,20 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
     }
 
     private fun validateForm(): Boolean {
-        return true
+        var alreadyFocused = false
+        var isValid = true
+        binding.inputCpf.isErrorEnabled = false
+
+        if (!binding.denunciaAnonimaCheck.isChecked){
+            if (!Validations.isCPF(binding.inputCpf.editText?.text.toString())){
+                isValid = false
+                binding.inputCpf.error = "CPF inválido"
+            }
+
+        }
+
+
+        return isValid
     }
 
 

@@ -12,12 +12,16 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_nav_home_to_pickLocationFragment"
-            app:destination="@id/pickLocationFragment" />
+            app:destination="@id/pickLocationFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
     </fragment>
     <fragment
         android:id="@+id/novaDenunciaFragment"
         android:name="br.com.oversight.ambienta.ui.novaDenuncia.NovaDenunciaFragment"
-        android:label="Nova denuncia" >
+        android:label="@string/menu_nova_denuncia">
         <argument
             android:name="latLng"
             app:argType="com.google.android.gms.maps.model.LatLng" />
@@ -25,10 +29,14 @@
     <fragment
         android:id="@+id/pickLocationFragment"
         android:name="br.com.oversight.ambienta.ui.pickLocation.PickLocationFragment"
-        android:label="Local da denúncia">
+        android:label="@string/menu_picklocation">
         <action
             android:id="@+id/action_pickLocationFragment_to_novaDenunciaFragment"
-            app:destination="@id/novaDenunciaFragment" />
+            app:destination="@id/novaDenunciaFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
     </fragment>
     <action
         android:id="@+id/action_global_nav_home"
