@@ -2,6 +2,7 @@ package br.com.oversight.ambienta.ui.novaDenuncia
 
 import android.os.Bundle
 import android.os.Parcel
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
@@ -16,6 +17,7 @@ import br.com.oversight.ambienta.databinding.FragmentNovaDenunciaBinding
 import br.com.oversight.ambienta.di.BaseFragment
 import br.com.oversight.ambienta.di.RequiresViewModel
 import br.com.oversight.ambienta.model.CategoriaDenuncia
+import br.com.oversight.ambienta.model.TipoCategoriaDenuncia
 import br.com.oversight.ambienta.service.ApiResult
 import br.com.oversight.ambienta.utils.Validations
 import br.com.oversight.ambienta.utils.extensions.hideKeyboard
@@ -24,7 +26,7 @@ import br.com.oversight.ambienta.utils.extensions.toDateBrFormat
 import br.com.oversight.ambienta.utils.extensions.toDateBrFormatWithHour
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.wajahatkarim3.easyvalidation.core.view_ktx.nonEmpty
+import com.google.android.material.textfield.TextInputLayout
 import timber.log.Timber
 import java.util.*
 
@@ -53,11 +55,14 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
             .setCalendarConstraints(CalendarConstraints.Builder().setValidator(object :
                 CalendarConstraints.DateValidator {
                 override fun writeToParcel(dest: Parcel?, flags: Int) {}
-                override fun isValid(date: Long): Boolean = (date < Calendar.getInstance().timeInMillis)
+                override fun isValid(date: Long): Boolean =
+                    (date < Calendar.getInstance().timeInMillis)
+
                 override fun describeContents(): Int = 0
 
             }).setEnd(Calendar.getInstance().timeInMillis).build()).setTitleText("Data do ocorrido")
             .build()
+
         this.datePicker.addOnPositiveButtonClickListener {
             val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
             Timber.i(calendar.time.toDateBrFormatWithHour())
@@ -80,22 +85,63 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
     }
 
     private fun validateForm(): Boolean {
-        var alreadyFocused = false
         var isValid = true
-        binding.inputCpf.isErrorEnabled = false
+        binding.inputCpfDenunciante.isErrorEnabled = false
 
-        if (!binding.denunciaAnonimaCheck.isChecked){
-            if (!Validations.isCPF(binding.inputCpf.editText?.text.toString())){
-                isValid = false
-                binding.inputCpf.error = "CPF inválido"
+        if (!binding.denunciaAnonimaCheck.isChecked) {
+
+            binding.inputCpfDenunciante.editText?.text.toString().apply {
+                binding.inputCpfDenunciante.isErrorEnabled = false
+                if (isEmpty()){
+                    isValid = false
+                    binding.inputCpfDenunciante.error = "Este campo é obrigatório"
+                }else if (!Validations.isCPF(this)) {
+                    isValid = false
+                    binding.inputCpfDenunciante.error = "CPF inválido"
+                }
             }
 
+            binding.inputEmail.editText?.text.toString().apply {
+                binding.inputEmail.isErrorEnabled = false
+                if (isEmpty()) {
+                    binding.inputEmail.error = "Este campo é obrigatório"
+                    isValid = false
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(this).matches()){
+                    binding.inputEmail.error = "E-mail inválido"
+                    isValid = false
+                }
+            }
+
+                if (!requireField(listOf(binding.inputNomeDenunciante, binding.inputEmail)))
+                    isValid = false
         }
 
+        if (!requireField(
+                listOf(
+                    binding.inputDataOcorrido,
+                    binding.inputDescricao,
+                    binding.inputTitulo,
+                    binding.inputCategoria
+                )
+            )
+        )
+            isValid = false
 
         return isValid
     }
 
+    private fun requireField(input: List<TextInputLayout>): Boolean {
+        var isValid = true
+        input.forEach {
+            it.isErrorEnabled = false
+            if (it.editText?.text.toString().isEmpty()) {
+                it.error = "Este campo é obrigatório"
+                isValid = false
+            }
+        }
+
+        return isValid
+    }
 
     override fun bindViewModel(viewModel: NovaDenunciaViewModel) {
         binding.apply {
@@ -107,9 +153,9 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
             binding.wrapDenunciante.visibility = if (it) View.GONE else View.VISIBLE
         })
 
-        viewModel.categoriaDenunciaList.observe(this, Observer {
+        viewModel.tipoCategoriaDenuncia.observe(this, Observer {
             when (it.status) {
-                ApiResult.Status.STATUS_SUCCESS -> prepareAutoComplete(it.data!!)
+                ApiResult.Status.STATUS_SUCCESS -> prepareTipoCategoriaDenuncia(it.data!!)
                 ApiResult.Status.STATUS_ERROR -> showSnack(
                     binding.root,
                     "Erro ao carregar categorias\n${it.errorMessage}"
@@ -128,11 +174,10 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
         })
     }
 
-    private fun prepareAutoComplete(categoriaDenunciaList: List<CategoriaDenuncia>) {
-
-        //Gender Spinner
+    private fun prepareCategoriaDenuncia(categoriaDenunciaList: List<CategoriaDenuncia>) {
+        //Categoria Spinner
         binding.autocompleteCategoria.setAdapter(
-            NoFilteringArrayAdapter<CategoriaDenuncia>(
+            NoFilteringArrayAdapter(
                 context,
                 R.layout.dropdown_menu_popup_item,
                 categoriaDenunciaList
@@ -148,6 +193,30 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
         binding.autocompleteCategoria.onFocusChangeListener =
             OnFocusChangeListener { _, hasFocus -> if (hasFocus && !binding.autocompleteCategoria.isPopupShowing) binding.autocompleteCategoria.showDropDown() }
         binding.autocompleteCategoria.setOnClickListener { if (!binding.autocompleteCategoria.isPopupShowing) binding.autocompleteCategoria.showDropDown() }
+    }
+
+    private fun prepareTipoCategoriaDenuncia(tipoCategoriaDenunciaList: List<TipoCategoriaDenuncia>) {
+        //Tipo Categoria Spinner
+        binding.autocompleteTipoCategoria.setAdapter(
+            NoFilteringArrayAdapter(
+                context,
+                R.layout.dropdown_menu_popup_item,
+                tipoCategoriaDenunciaList
+            )
+        )
+
+        binding.autocompleteTipoCategoria.onItemClickListener =
+            OnItemClickListener { parent, view, position, id ->
+                (parent.adapter.getItem(position) as TipoCategoriaDenuncia).categorias?.let {
+                    prepareCategoriaDenuncia(it)
+                    viewModel?.denuncia?.value?.categoria = null
+                    binding.autocompleteCategoria.text = null
+                }
+                binding.autocompleteTipoCategoria.error = null
+            }
+        binding.autocompleteTipoCategoria.onFocusChangeListener =
+            OnFocusChangeListener { _, hasFocus -> if (hasFocus && !binding.autocompleteTipoCategoria.isPopupShowing) binding.autocompleteTipoCategoria.showDropDown() }
+        binding.autocompleteTipoCategoria.setOnClickListener { if (!binding.autocompleteTipoCategoria.isPopupShowing) binding.autocompleteTipoCategoria.showDropDown() }
 
     }
 }

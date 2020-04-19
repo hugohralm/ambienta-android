@@ -62,7 +62,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:checked="@={vm.isDenunciaAnonima}"
-                    android:text="Denúncia anonima"/>
+                    android:text="Denúncia anonima" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/wrap_denunciante"
@@ -77,6 +77,7 @@
                         android:text="Dados do denúnciante" />
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/input_nome_denunciante"
                         style="@style/TextInputLayout.Default"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -93,7 +94,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/input_cpf"
+                        android:id="@+id/input_cpf_denunciante"
                         style="@style/TextInputLayout.Default"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -112,25 +113,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/TextInputLayout.Default"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:hint="Telefone *">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            mascara='@{"([00]) [00000]-[0000]"}'
-                            mascaraSecundaria='@{"([00]) [0000]-[0000]"}'
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:digits="0123456789.-() "
-                            android:imeOptions="actionNext"
-                            android:inputType="phone"
-                            android:text="@={vm.denuncia.telefoneDenunciante}" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/input_email"
                         style="@style/TextInputLayout.Default"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -155,13 +138,52 @@
                     android:layout_height="wrap_content"
                     android:text="Dados da denúncia" />
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_nome_denunciado"
+                    style="@style/TextInputLayout.Default"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:hint="Nome do denunciado (opcional)">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapSentences"
+                        android:text="@={vm.denuncia.nomeDenunciado}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_tipo_categoria"
                     style="@style/InputLayout.Default.ExposedDropDown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:hint="Tipo da denúncia *"
+                    android:hint="Tipo da categoria *"
+                    app:endIconDrawable="@drawable/ic_arrow_down_black"
+                    app:endIconMode="custom">
+
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/autocomplete_tipo_categoria"
+                        style="@style/AutoCompleteTextView.Default"
+                        android:layout_width="match_parent"
+                        android:editable="false"
+                        android:imeOptions="actionNext"
+                        android:inputType="none"
+                        android:singleLine="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_categoria"
+                    style="@style/InputLayout.Default.ExposedDropDown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:hint="Categoria *"
                     app:endIconDrawable="@drawable/ic_arrow_down_black"
                     app:endIconMode="custom">
 
@@ -177,6 +199,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_data_ocorrido"
                     style="@style/TextInputLayout.Default"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -195,6 +218,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_titulo"
                     style="@style/TextInputLayout.Default"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -211,6 +235,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_descricao"
                     style="@style/TextInputLayout.Default"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

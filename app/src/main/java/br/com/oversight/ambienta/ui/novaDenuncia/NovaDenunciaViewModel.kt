@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.oversight.ambienta.model.CategoriaDenuncia
 import br.com.oversight.ambienta.model.Denuncia
+import br.com.oversight.ambienta.model.TipoCategoriaDenuncia
 import br.com.oversight.ambienta.service.ApiResult
 import br.com.oversight.ambienta.service.DenunciaRepository
 import javax.inject.Inject
@@ -18,9 +19,9 @@ class NovaDenunciaViewModel @Inject constructor(private val denunciaRepository: 
         it.value = Denuncia()
     }
 
-    val categoriaDenunciaList: MutableLiveData<ApiResult<List<CategoriaDenuncia>>> =
-        MutableLiveData<ApiResult<List<CategoriaDenuncia>>>().also {
-            denunciaRepository.listarCategorias().observeForever { result ->
+    val tipoCategoriaDenuncia: MutableLiveData<ApiResult<List<TipoCategoriaDenuncia>>> =
+        MutableLiveData<ApiResult<List<TipoCategoriaDenuncia>>>().also {
+            denunciaRepository.listarTiposCategorias().observeForever { result ->
                 it.value = result
             }
         }

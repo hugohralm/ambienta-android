@@ -1,8 +1,6 @@
 package br.com.oversight.ambienta.service
 
 import androidx.lifecycle.LiveData
-import br.com.oversight.ambienta.model.TipoDenuncia
-import com.google.gson.reflect.TypeToken
 import retrofit2.CallAdapter
 import retrofit2.CallAdapter.Factory
 import retrofit2.Retrofit

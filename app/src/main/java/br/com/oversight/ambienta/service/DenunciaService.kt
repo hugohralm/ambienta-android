@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import br.com.oversight.ambienta.model.CategoriaDenuncia
 import br.com.oversight.ambienta.model.Denuncia
+import br.com.oversight.ambienta.model.TipoCategoriaDenuncia
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -17,7 +18,7 @@ interface DenunciaService {
     @POST("api/denuncias")
     fun create(@Body denuncia: Denuncia): LiveData<ApiResult<Denuncia>>
 
-    @GET("api/categorias")
-    fun getCategoriasDenuncia(): LiveData<ApiResult<List<CategoriaDenuncia>>>
+    @GET("api/tipos-categoria")
+    fun getTipoCategoriaDenuncia(): LiveData<ApiResult<List<TipoCategoriaDenuncia>>>
 
 }
