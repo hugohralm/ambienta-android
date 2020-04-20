@@ -2,14 +2,14 @@ package br.com.oversight.ambienta.ui.novaDenuncia
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import br.com.oversight.ambienta.model.CategoriaDenuncia
 import br.com.oversight.ambienta.model.Denuncia
-import br.com.oversight.ambienta.model.TipoCategoriaDenuncia
+import br.com.oversight.ambienta.model.TipoCategoria
 import br.com.oversight.ambienta.service.ApiResult
 import br.com.oversight.ambienta.service.DenunciaRepository
+import br.com.oversight.ambienta.service.room.AppDatabase
 import javax.inject.Inject
 
-class NovaDenunciaViewModel @Inject constructor(private val denunciaRepository: DenunciaRepository) :
+class NovaDenunciaViewModel @Inject constructor(private val denunciaRepository: DenunciaRepository, private val database: AppDatabase) :
     ViewModel() {
     val isDenunciaAnonima: MutableLiveData<Boolean> = MutableLiveData<Boolean>().also {
         it.value = false
@@ -19,10 +19,9 @@ class NovaDenunciaViewModel @Inject constructor(private val denunciaRepository: 
         it.value = Denuncia()
     }
 
-    val tipoCategoriaDenuncia: MutableLiveData<ApiResult<List<TipoCategoriaDenuncia>>> =
-        MutableLiveData<ApiResult<List<TipoCategoriaDenuncia>>>().also {
-            denunciaRepository.listarTiposCategorias().observeForever { result ->
-                it.value = result
+    val tipoCategoria: MutableLiveData<List<TipoCategoria>> = MutableLiveData<List<TipoCategoria>>().also {
+            database.tipoCategoriaDao().getAllTipoCategoria().observeForever{categoriaList ->
+                it.value = categoriaList
             }
         }
 

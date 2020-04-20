@@ -16,8 +16,8 @@ import br.com.oversight.ambienta.adapter.NoFilteringArrayAdapter
 import br.com.oversight.ambienta.databinding.FragmentNovaDenunciaBinding
 import br.com.oversight.ambienta.di.BaseFragment
 import br.com.oversight.ambienta.di.RequiresViewModel
-import br.com.oversight.ambienta.model.CategoriaDenuncia
-import br.com.oversight.ambienta.model.TipoCategoriaDenuncia
+import br.com.oversight.ambienta.model.Categoria
+import br.com.oversight.ambienta.model.TipoCategoria
 import br.com.oversight.ambienta.service.ApiResult
 import br.com.oversight.ambienta.utils.Validations
 import br.com.oversight.ambienta.utils.extensions.hideKeyboard
@@ -153,14 +153,8 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
             binding.wrapDenunciante.visibility = if (it) View.GONE else View.VISIBLE
         })
 
-        viewModel.tipoCategoriaDenuncia.observe(this, Observer {
-            when (it.status) {
-                ApiResult.Status.STATUS_SUCCESS -> prepareTipoCategoriaDenuncia(it.data!!)
-                ApiResult.Status.STATUS_ERROR -> showSnack(
-                    binding.root,
-                    "Erro ao carregar categorias\n${it.errorMessage}"
-                )
-            }
+        viewModel.tipoCategoria.observe(this, Observer {
+               if (it.isNotEmpty()) prepareTipoCategoriaDenuncia(it)
         })
 
         viewModel.requestDenuncia.observe(this, Observer {
@@ -174,20 +168,20 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
         })
     }
 
-    private fun prepareCategoriaDenuncia(categoriaDenunciaList: List<CategoriaDenuncia>) {
+    private fun prepareCategoriaDenuncia(categoriaList: List<Categoria>) {
         //Categoria Spinner
         binding.autocompleteCategoria.setAdapter(
             NoFilteringArrayAdapter(
                 context,
                 R.layout.dropdown_menu_popup_item,
-                categoriaDenunciaList
+                categoriaList
             )
         )
 
         binding.autocompleteCategoria.onItemClickListener =
-            OnItemClickListener { parent, view, position, id ->
+            OnItemClickListener { parent, _, position, _ ->
                 viewModel?.denuncia?.value?.categoria =
-                    parent.adapter.getItem(position) as CategoriaDenuncia
+                    parent.adapter.getItem(position) as Categoria
                 binding.autocompleteCategoria.error = null
             }
         binding.autocompleteCategoria.onFocusChangeListener =
@@ -195,19 +189,19 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
         binding.autocompleteCategoria.setOnClickListener { if (!binding.autocompleteCategoria.isPopupShowing) binding.autocompleteCategoria.showDropDown() }
     }
 
-    private fun prepareTipoCategoriaDenuncia(tipoCategoriaDenunciaList: List<TipoCategoriaDenuncia>) {
+    private fun prepareTipoCategoriaDenuncia(tipoCategoriaList: List<TipoCategoria>) {
         //Tipo Categoria Spinner
         binding.autocompleteTipoCategoria.setAdapter(
             NoFilteringArrayAdapter(
                 context,
                 R.layout.dropdown_menu_popup_item,
-                tipoCategoriaDenunciaList
+                tipoCategoriaList
             )
         )
 
         binding.autocompleteTipoCategoria.onItemClickListener =
-            OnItemClickListener { parent, view, position, id ->
-                (parent.adapter.getItem(position) as TipoCategoriaDenuncia).categorias?.let {
+            OnItemClickListener { parent, _, position, _ ->
+                (parent.adapter.getItem(position) as TipoCategoria).categorias?.let {
                     prepareCategoriaDenuncia(it)
                     viewModel?.denuncia?.value?.categoria = null
                     binding.autocompleteCategoria.text = null

@@ -18,7 +18,7 @@ abstract class BaseActivity<ViewModelType: ViewModel>: AppCompatActivity(), HasA
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private var viewModel: ViewModelType? = null
+    protected var viewModel: ViewModelType? = null
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 

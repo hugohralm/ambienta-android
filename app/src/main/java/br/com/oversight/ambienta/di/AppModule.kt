@@ -2,11 +2,14 @@ package br.com.oversight.ambienta.di
 
 import android.content.Context
 import android.os.Vibrator
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import br.com.oversight.ambienta.AmbientaApplication
 import br.com.oversight.ambienta.BuildConfig
 import br.com.oversight.ambienta.service.BooleanTypeAdapter
 import br.com.oversight.ambienta.service.DenunciaService
 import br.com.oversight.ambienta.service.LiveDataCallAdapterFactory
+import br.com.oversight.ambienta.service.room.AppDatabase
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -78,6 +81,12 @@ class AppModule {
     @Singleton
     fun provideDenunciaService(retrofit: Retrofit): DenunciaService {
         return retrofit.create(DenunciaService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRoomDatabase(context: Context): AppDatabase {
+        return Room.databaseBuilder(context, AppDatabase::class.java, "ambienta_db").build()
     }
 
 }

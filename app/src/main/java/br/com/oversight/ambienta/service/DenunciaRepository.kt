@@ -1,12 +1,8 @@
 package br.com.oversight.ambienta.service
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import br.com.oversight.ambienta.model.CategoriaDenuncia
 import br.com.oversight.ambienta.model.Denuncia
-import br.com.oversight.ambienta.model.TipoCategoriaDenuncia
-import br.com.oversight.ambienta.service.ApiResult
-import br.com.oversight.ambienta.service.DenunciaService
+import br.com.oversight.ambienta.model.TipoCategoria
 import javax.inject.Inject
 
 class DenunciaRepository @Inject constructor(private val denunciaService: DenunciaService) {
@@ -14,7 +10,7 @@ class DenunciaRepository @Inject constructor(private val denunciaService: Denunc
         return denunciaService.create(denuncia)
     }
 
-    fun listarTiposCategorias(): LiveData<ApiResult<List<TipoCategoriaDenuncia>>> {
+    fun listarTiposCategorias(): LiveData<ApiResult<List<TipoCategoria>>> {
         return denunciaService.getTipoCategoriaDenuncia()
     }
 

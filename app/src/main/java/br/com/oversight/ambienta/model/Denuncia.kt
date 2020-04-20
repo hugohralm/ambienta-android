@@ -1,10 +1,13 @@
 package br.com.oversight.ambienta.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import br.com.oversight.ambienta.utils.extensions.clearSpecialCharacters
 import java.util.*
 
+@Entity
 data class Denuncia(
-    var id: Int? = null,
+    @PrimaryKey var id: Int? = null,
     var codigoAcompanhamento: String? = null,
     var status: StatusDenuncia? = null,
 
@@ -15,7 +18,7 @@ data class Denuncia(
     var nomeDenunciado: String? = null,
 
     var titulo: String? = null,
-    var categoria: CategoriaDenuncia? = null,
+    var categoria: Categoria? = null,
     var dataOcorrido: Date? = null,
     var descricao: String? = "",
     var latitude: Double? = null,
