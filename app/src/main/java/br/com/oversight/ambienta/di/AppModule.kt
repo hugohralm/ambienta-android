@@ -56,7 +56,7 @@ class AppModule {
                     .build()
                 chain.proceed(request)
             }
-            .addInterceptor(HttpLoggingInterceptor().also { it.level =  HttpLoggingInterceptor.Level.BODY})
+            //.addInterceptor(HttpLoggingInterceptor().also { it.level =  HttpLoggingInterceptor.Level.BODY})
         return client.build()
     }
 

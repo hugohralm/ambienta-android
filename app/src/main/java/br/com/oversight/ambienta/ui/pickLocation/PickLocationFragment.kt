@@ -109,7 +109,7 @@ class PickLocationFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(map: GoogleMap) {
         mMap = map
-        val density = context!!.resources.displayMetrics.density
+        val density = requireContext().resources.displayMetrics.density
         mMap.setPadding(0, 0, 0, (65 * density).toInt())
         mMap.isBuildingsEnabled = false
         mMap.setOnCameraIdleListener {

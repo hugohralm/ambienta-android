@@ -1,5 +1,7 @@
 package br.com.oversight.ambienta.ui.novaDenuncia
 
+import android.Manifest
+import android.content.Intent
 import android.os.Bundle
 import android.os.Parcel
 import android.util.Patterns
@@ -9,8 +11,10 @@ import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.GridLayoutManager
 import br.com.oversight.ambienta.R
 import br.com.oversight.ambienta.adapter.NoFilteringArrayAdapter
 import br.com.oversight.ambienta.databinding.FragmentNovaDenunciaBinding
@@ -27,15 +31,34 @@ import br.com.oversight.ambienta.utils.extensions.toDateBrFormatWithHour
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.RuntimePermissions
+import pl.aprilapps.easyphotopicker.DefaultCallback
+import pl.aprilapps.easyphotopicker.EasyImage
+import pl.aprilapps.easyphotopicker.MediaFile
+import pl.aprilapps.easyphotopicker.MediaSource
 import timber.log.Timber
 import java.util.*
 
+
+@RuntimePermissions
 @RequiresViewModel(NovaDenunciaViewModel::class)
-class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
-    val args: NovaDenunciaFragmentArgs by navArgs()
+class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>(),
+    EvidenciasListAdapter.EvidenciasAdapterCallbacks {
+    private val args: NovaDenunciaFragmentArgs by navArgs()
 
     lateinit var binding: FragmentNovaDenunciaBinding
     lateinit var datePicker: MaterialDatePicker<Long>
+    private val evidenciasListAdapter = EvidenciasListAdapter(this)
+    private lateinit var easyImage: EasyImage
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +74,26 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
             latitude = args.latLng.latitude
             longitude = args.latLng.longitude
         }
+
+        easyImage = EasyImage.Builder(requireContext()).allowMultiple(true).build()
+
+        binding.recyclerViewPhotos.apply {
+            layoutManager = GridLayoutManager(context, 2)
+            adapter = evidenciasListAdapter
+
+        }
+
+        prepareCalendar()
+
+        binding.btnSend.setOnClickListener {
+            hideKeyboard()
+            if (validateForm()) {
+                viewModel!!.denuncia.value?.clearMask()?.let { viewModel?.postDenuncia(it) }
+            }
+        }
+    }
+
+    private fun prepareCalendar() {
         this.datePicker = MaterialDatePicker.Builder.datePicker()
             .setCalendarConstraints(CalendarConstraints.Builder().setValidator(object :
                 CalendarConstraints.DateValidator {
@@ -75,13 +118,6 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
         this.binding.dataOcorrido.setOnClickListener {
             this.datePicker.show(childFragmentManager, datePicker.tag)
         }
-
-        binding.btnSend.setOnClickListener {
-            hideKeyboard()
-            if (validateForm()) {
-                viewModel!!.denuncia.value?.clearMask()?.let { viewModel?.postDenuncia(it) }
-            }
-        }
     }
 
     private fun validateForm(): Boolean {
@@ -92,10 +128,10 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
 
             binding.inputCpfDenunciante.editText?.text.toString().apply {
                 binding.inputCpfDenunciante.isErrorEnabled = false
-                if (isEmpty()){
+                if (isEmpty()) {
                     isValid = false
                     binding.inputCpfDenunciante.error = "Este campo é obrigatório"
-                }else if (!Validations.isCPF(this)) {
+                } else if (!Validations.isCPF(this)) {
                     isValid = false
                     binding.inputCpfDenunciante.error = "CPF inválido"
                 }
@@ -106,14 +142,14 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
                 if (isEmpty()) {
                     binding.inputEmail.error = "Este campo é obrigatório"
                     isValid = false
-                } else if (!Patterns.EMAIL_ADDRESS.matcher(this).matches()){
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(this).matches()) {
                     binding.inputEmail.error = "E-mail inválido"
                     isValid = false
                 }
             }
 
-                if (!requireField(listOf(binding.inputNomeDenunciante, binding.inputEmail)))
-                    isValid = false
+            if (!requireField(listOf(binding.inputNomeDenunciante, binding.inputEmail)))
+                isValid = false
         }
 
         if (!requireField(
@@ -154,16 +190,40 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
         })
 
         viewModel.tipoCategoria.observe(this, Observer {
-               if (it.isNotEmpty()) prepareTipoCategoriaDenuncia(it)
+            if (it.isNotEmpty()) prepareTipoCategoriaDenuncia(it)
         })
 
-        viewModel.requestDenuncia.observe(this, Observer {
-            when (it.status) {
+        viewModel.requestDenuncia.observe(this, Observer { denunciaRequest ->
+            when (denunciaRequest.status) {
                 ApiResult.Status.STATUS_SUCCESS -> {
                     showSnack(binding.root, "Denuncia cadastrada com sucesso")
-                    findNavController().navigate(NovaDenunciaFragmentDirections.actionGlobalNavHome())
+                    if (evidenciasListAdapter.getEvidencias().isNotEmpty()) {
+
+                        val evidencias = evidenciasListAdapter.getEvidencias()
+                        viewModel.total = evidencias.size
+                        viewModel.count.observe(this, Observer {
+                            if (it == viewModel.total) findNavController().navigate(NovaDenunciaFragmentDirections.actionGlobalNavHome())
+                        })
+                        evidencias.forEach { mediaFile ->
+
+                            val body = MultipartBody.Part.createFormData(
+                                "file",
+                                mediaFile.file.name,
+                                mediaFile.file.asRequestBody("image/*".toMediaTypeOrNull())
+                            )
+
+                            viewModel.postEvidencias(denunciaRequest.data!!.id!!.toString()
+                                    .toRequestBody("text/plain".toMediaTypeOrNull()), body)
+                        }
+
+
+                    } else findNavController().navigate(NovaDenunciaFragmentDirections.actionGlobalNavHome())
                 }
-                ApiResult.Status.STATUS_ERROR -> showSnack(binding.root, "Erro: ${it.errorMessage}")
+                ApiResult.Status.STATUS_ERROR -> showSnack(
+                    binding.root,
+                    "Erro: ${denunciaRequest.errorMessage}"
+                )
+                ApiResult.Status.STATUS_LOADING -> viewModel.isLoading.value = true
             }
         })
     }
@@ -212,5 +272,57 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>() {
             OnFocusChangeListener { _, hasFocus -> if (hasFocus && !binding.autocompleteTipoCategoria.isPopupShowing) binding.autocompleteTipoCategoria.showDropDown() }
         binding.autocompleteTipoCategoria.setOnClickListener { if (!binding.autocompleteTipoCategoria.isPopupShowing) binding.autocompleteTipoCategoria.showDropDown() }
 
+    }
+
+    override fun addEvidencia() {
+        openChooserWithPermissionCheck()
+    }
+
+    @NeedsPermission(
+        Manifest.permission.CAMERA,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    )
+    fun openChooser() {
+        easyImage.openChooser(this)
+    }
+
+    private fun onPhotosReturned(imageFiles: Array<MediaFile>) {
+        imageFiles.forEach {
+            evidenciasListAdapter.addItem(it)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        onRequestPermissionsResult(requestCode, grantResults)
+    }
+
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        super.onActivityResult(requestCode, resultCode, data)
+        activity?.let {
+            easyImage.handleActivityResult(requestCode, resultCode, data, it,
+                object : DefaultCallback() {
+                    override fun onMediaFilesPicked(
+                        imageFiles: Array<MediaFile>,
+                        source: MediaSource
+                    ) {
+                        onPhotosReturned(imageFiles)
+                    }
+
+                    override fun onImagePickerError(error: Throwable, source: MediaSource) {
+                        //Some error handling
+                        error.printStackTrace()
+                    }
+                })
+        }
     }
 }

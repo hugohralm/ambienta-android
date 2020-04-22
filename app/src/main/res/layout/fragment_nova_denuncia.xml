@@ -12,7 +12,7 @@
             type="br.com.oversight.ambienta.ui.novaDenuncia.NovaDenunciaViewModel" />
     </data>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -23,7 +23,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                showView="@{vm.requestDenuncia.statusLoading}"
+                showView="@{vm.isLoading}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -43,12 +43,12 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:gravity="center"
-                    android:text="Enviando denuncia..." />
+                    android:text="@{vm.requestDenuncia.statusLoading? `Enviando denuncia...` : `Enviando evidências..(`+ vm.count + `/`+ vm.total + `)`}" />
 
             </LinearLayout>
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                hideView="@{vm.requestDenuncia.statusLoading}"
+                hideView="@{vm.isLoading}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:animateLayoutChanges="true"
@@ -251,6 +251,20 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/headerFields"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Anexar evidências" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_photos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/item_evidencia"
+                    tools:itemCount="0"/>
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_send"
                     android:layout_width="match_parent"
@@ -261,5 +275,5 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </layout>
