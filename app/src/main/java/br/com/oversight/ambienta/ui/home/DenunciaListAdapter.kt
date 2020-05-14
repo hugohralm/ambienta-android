@@ -48,8 +48,8 @@ class DenunciaListAdapter(private val denunciaListener: DenunciaCallbacks) :
 
         fun bind(item: Denuncia, index: Int) {
             binding.apply {
-                listener.onItemClick(item, index)
                 denuncia = item
+                card.setOnClickListener { listener.onItemClick(item, index) }
                 status.setBackgroundColor(Color.parseColor(item.status?.color))
                 executePendingBindings()
             }

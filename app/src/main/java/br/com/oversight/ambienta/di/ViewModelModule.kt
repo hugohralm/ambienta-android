@@ -3,6 +3,7 @@ package br.com.oversight.ambienta.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import br.com.oversight.ambienta.ui.MainViewModel
+import br.com.oversight.ambienta.ui.detalheDenuncia.DetalheDenunciaViewModel
 import br.com.oversight.ambienta.ui.home.HomeViewModel
 import br.com.oversight.ambienta.ui.novaDenuncia.NovaDenunciaViewModel
 import com.umobi.mercadoon.util.ViewModelProviderFactory
@@ -30,4 +31,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(NovaDenunciaViewModel::class)
     abstract fun bindNovaDenunciaViewModel(viewModel: NovaDenunciaViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DetalheDenunciaViewModel::class)
+    abstract fun bindDetalheDenunciaViewModel(viewModel: DetalheDenunciaViewModel): ViewModel
 }

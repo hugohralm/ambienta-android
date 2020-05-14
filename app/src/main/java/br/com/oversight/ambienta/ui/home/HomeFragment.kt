@@ -25,6 +25,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), DenunciaListAdapter.Denuncia
 
     lateinit var binding: FragmentHomeBinding
     var denunciaListAdapter: DenunciaListAdapter = DenunciaListAdapter(this)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,6 +67,6 @@ class HomeFragment : BaseFragment<HomeViewModel>(), DenunciaListAdapter.Denuncia
     }
 
     override fun onItemClick(denuncia: Denuncia, position: Int) {
-
+        findNavController().navigate(HomeFragmentDirections.actionNavHomeToDetalheDenunciaFragment(denuncia))
     }
 }

@@ -17,6 +17,9 @@
             app:exitAnim="@anim/exit_to_left"
             app:popEnterAnim="@anim/enter_from_left"
             app:popExitAnim="@anim/exit_to_right" />
+        <action
+            android:id="@+id/action_nav_home_to_detalheDenunciaFragment"
+            app:destination="@id/detalheDenunciaFragment" />
     </fragment>
     <fragment
         android:id="@+id/novaDenunciaFragment"
@@ -42,6 +45,14 @@
         android:id="@+id/action_global_nav_home"
         app:destination="@id/nav_home"
         app:popUpTo="@id/nav_home" />
+    <fragment
+        android:id="@+id/detalheDenunciaFragment"
+        android:name="br.com.oversight.ambienta.ui.detalheDenuncia.DetalheDenunciaFragment"
+        android:label="DetalheDenunciaFragment" >
+        <argument
+            android:name="denuncia"
+            app:argType="br.com.oversight.ambienta.model.Denuncia" />
+    </fragment>
 
 
 </navigation>

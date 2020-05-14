@@ -3,6 +3,7 @@ package br.com.oversight.ambienta.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import br.com.oversight.ambienta.utils.extensions.clearSpecialCharacters
+import java.io.Serializable
 import java.util.*
 
 @Entity
@@ -22,8 +23,9 @@ data class Denuncia(
     var dataOcorrido: Date? = null,
     var descricao: String? = "",
     var latitude: Double? = null,
-    var longitude: Double? = null
-){
+    var longitude: Double? = null,
+    var evidencias: List<Evidencia> = mutableListOf()
+): Serializable{
 
     fun clearMask(): Denuncia {
         val denuncia = this.copy()
