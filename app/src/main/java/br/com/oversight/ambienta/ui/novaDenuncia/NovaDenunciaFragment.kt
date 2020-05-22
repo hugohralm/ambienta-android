@@ -11,7 +11,6 @@ import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -31,12 +30,8 @@ import br.com.oversight.ambienta.utils.extensions.toDateBrFormatWithHour
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputLayout
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import permissions.dispatcher.NeedsPermission
@@ -196,13 +191,20 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>(),
         viewModel.requestDenuncia.observe(this, Observer { denunciaRequest ->
             when (denunciaRequest.status) {
                 ApiResult.Status.STATUS_SUCCESS -> {
-                    showSnack(binding.root, "Denuncia cadastrada com sucesso")
+                    val denuncia = denunciaRequest.data!!
                     if (evidenciasListAdapter.getEvidencias().isNotEmpty()) {
+                        showSnack(binding.root, "Denuncia cadastrada com sucesso")
 
                         val evidencias = evidenciasListAdapter.getEvidencias()
                         viewModel.total = evidencias.size
                         viewModel.count.observe(this, Observer {
-                            if (it == viewModel.total) findNavController().navigate(NovaDenunciaFragmentDirections.actionGlobalNavHome())
+                            if (it == viewModel.total) {
+                                findNavController().navigate(
+                                    NovaDenunciaFragmentDirections.actionNovaDenunciaFragmentToDenunciaRegisterSuccess(
+                                        denuncia.codigoAcompanhamento!!
+                                    )
+                                )
+                            }
                         })
                         evidencias.forEach { mediaFile ->
 
@@ -212,12 +214,18 @@ class NovaDenunciaFragment : BaseFragment<NovaDenunciaViewModel>(),
                                 mediaFile.file.asRequestBody("image/*".toMediaTypeOrNull())
                             )
 
-                            viewModel.postEvidencias(denunciaRequest.data!!.id!!.toString()
-                                    .toRequestBody("text/plain".toMediaTypeOrNull()), body)
+                            viewModel.postEvidencias(
+                                denuncia.id!!.toString()
+                                    .toRequestBody("text/plain".toMediaTypeOrNull()), body
+                            )
                         }
 
 
-                    } else findNavController().navigate(NovaDenunciaFragmentDirections.actionGlobalNavHome())
+                    } else  findNavController().navigate(
+                        NovaDenunciaFragmentDirections.actionNovaDenunciaFragmentToDenunciaRegisterSuccess(
+                            denuncia.codigoAcompanhamento!!
+                        )
+                    )
                 }
                 ApiResult.Status.STATUS_ERROR -> showSnack(
                     binding.root,

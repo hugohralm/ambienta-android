@@ -14,4 +14,7 @@
     <string name="menu_home">Minhas denúncias</string>
     <string name="menu_picklocation">Local da denúncia</string>
     <string name="menu_nova_denuncia">Nova denuncia</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

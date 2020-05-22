@@ -1,6 +1,7 @@
 package br.com.oversight.ambienta.model
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import br.com.oversight.ambienta.utils.extensions.clearSpecialCharacters
 import java.io.Serializable
@@ -10,20 +11,30 @@ import java.util.*
 data class Denuncia(
     @PrimaryKey var id: Int? = null,
     var codigoAcompanhamento: String? = null,
+    @Ignore
     var status: StatusDenuncia? = null,
 
-    var cpfDenunciante: String? = null,//
-    var nomeDenunciante: String? = null,//
-    var emailDenunciante: String? = null,//
-
+    @Ignore
+    var cpfDenunciante: String? = null,
+    @Ignore
+    var nomeDenunciante: String? = null,
+    @Ignore
+    var emailDenunciante: String? = null,
+    @Ignore
     var nomeDenunciado: String? = null,
 
     var titulo: String? = null,
+    @Ignore
     var categoria: Categoria? = null,
+    @Ignore
     var dataOcorrido: Date? = null,
+    @Ignore
     var descricao: String? = "",
+    @Ignore
     var latitude: Double? = null,
+    @Ignore
     var longitude: Double? = null,
+    @Ignore
     var evidencias: List<Evidencia> = mutableListOf()
 ): Serializable{
 

@@ -15,9 +15,9 @@ class MainViewModel @Inject constructor(
 
     val tipoCategoria: MutableLiveData<ApiResult<List<TipoCategoria>>> =
         MutableLiveData<ApiResult<List<TipoCategoria>>>().also {
-//            denunciaRepository.listarTiposCategorias().observeForever { result ->
-//                it.value = result
-//            }
+            denunciaRepository.listarTiposCategorias().observeForever { result ->
+                it.value = result
+            }
         }
 
 }

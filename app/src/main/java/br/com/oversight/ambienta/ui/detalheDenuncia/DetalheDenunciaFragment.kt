@@ -58,7 +58,7 @@ class DetalheDenunciaFragment : BaseFragment<DetalheDenunciaViewModel>(), OnMapR
             val lng = LatLng(it.latitude!!, it.longitude!!)
             map.addMarker(MarkerOptions().position(lng).title(it.titulo))
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(lng, 17f))
-            enableMyLocation(map)
+            enableMyLocationWithPermissionCheck(map)
 
             (childFragmentManager.findFragmentById(R.id.map) as WorkaroundMapFragment)
                 .setListener(object :

@@ -28,6 +28,11 @@
         <argument
             android:name="latLng"
             app:argType="com.google.android.gms.maps.model.LatLng" />
+        <action
+            android:id="@+id/action_novaDenunciaFragment_to_denunciaRegisterSuccess"
+            app:destination="@id/denunciaRegisterSuccess"
+            app:popUpTo="@id/nav_home"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/pickLocationFragment"
@@ -44,14 +49,23 @@
     <action
         android:id="@+id/action_global_nav_home"
         app:destination="@id/nav_home"
-        app:popUpTo="@id/nav_home" />
+        app:popUpTo="@id/nav_home"
+        app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/detalheDenunciaFragment"
         android:name="br.com.oversight.ambienta.ui.detalheDenuncia.DetalheDenunciaFragment"
-        android:label="DetalheDenunciaFragment" >
+        android:label="Detalhe da denúncia">
         <argument
             android:name="denuncia"
             app:argType="br.com.oversight.ambienta.model.Denuncia" />
+    </fragment>
+    <fragment
+        android:id="@+id/denunciaRegisterSuccess"
+        android:name="br.com.oversight.ambienta.ui.denunciaRegistrada.DenunciaRegisterSuccess"
+        android:label="Denuncia registrada">
+        <argument
+            android:name="codigo"
+            app:argType="string" />
     </fragment>
 
 
