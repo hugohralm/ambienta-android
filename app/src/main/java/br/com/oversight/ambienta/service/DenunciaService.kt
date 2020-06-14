@@ -12,8 +12,8 @@ import retrofit2.http.*
 
 interface DenunciaService {
 
-    @GET("api/denuncias")
-    fun getAll(): LiveData<ApiResult<List<Denuncia>>>
+    @GET("api/denuncias/acompanhar")
+    fun getAll(@Query("codigo") codigos: List<String>): LiveData<ApiResult<List<Denuncia>>>
 
     @POST("api/denuncias")
     fun create(@Body denuncia: Denuncia): LiveData<ApiResult<Denuncia>>

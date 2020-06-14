@@ -19,7 +19,11 @@
             app:popExitAnim="@anim/exit_to_right" />
         <action
             android:id="@+id/action_nav_home_to_detalheDenunciaFragment"
-            app:destination="@id/detalheDenunciaFragment" />
+            app:destination="@id/detalheDenunciaFragment"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right" />
     </fragment>
     <fragment
         android:id="@+id/novaDenunciaFragment"
@@ -32,6 +36,10 @@
             android:id="@+id/action_novaDenunciaFragment_to_denunciaRegisterSuccess"
             app:destination="@id/denunciaRegisterSuccess"
             app:popUpTo="@id/nav_home"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment

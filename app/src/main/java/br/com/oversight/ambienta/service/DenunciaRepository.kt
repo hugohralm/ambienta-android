@@ -19,8 +19,8 @@ class DenunciaRepository @Inject constructor(private val denunciaService: Denunc
         return denunciaService.getTipoCategoriaDenuncia()
     }
 
-    fun listarDenuncias(): LiveData<ApiResult<List<Denuncia>>> {
-        return denunciaService.getAll()
+    fun listarDenuncias(codigos: List<String>): LiveData<ApiResult<List<Denuncia>>> {
+        return denunciaService.getAll(codigos)
     }
 
     fun postImage(id: RequestBody, file: MultipartBody.Part): LiveData<ApiResult<Evidencia>> {

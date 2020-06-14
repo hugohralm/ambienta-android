@@ -2,6 +2,9 @@ package br.com.oversight.ambienta.ui
 
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
+import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageView
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -36,18 +39,24 @@ class MainActivity : BaseActivity<MainViewModel>() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            run {
+                if (destination.id == R.id.nav_home) {
+                    toolbar.setPadding(180,0,0,0)
+                    findViewById<AppCompatImageView>(R.id.image)?.visibility = View.VISIBLE
+                }else {
+                    toolbar.setPadding(0,0,0,0)
+                    findViewById<AppCompatImageView>(R.id.image)?.visibility = View.GONE
+                }
+            }
+        }
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home
-            ), drawerLayout
+            )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
 
         this.viewModel?.tipoCategoria?.observe(this, Observer {
             if (it.status == ApiResult.Status.STATUS_SUCCESS) {

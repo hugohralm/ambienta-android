@@ -51,5 +51,15 @@
             app:srcCompat="@drawable/ic_add_white"
             app:tint="#fff" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="88dp"
+            android:layout_marginEnd="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_search"
+            app:tint="#fff" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

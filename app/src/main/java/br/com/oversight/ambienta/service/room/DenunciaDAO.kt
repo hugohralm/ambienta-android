@@ -8,8 +8,7 @@ import br.com.oversight.ambienta.model.TipoCategoria
 
 @Dao
 interface DenunciaDAO {
-    //tipoCategoria
-    @Transaction
+
     @Query("SELECT * FROM Denuncia")
     fun getAll(): LiveData<List<Denuncia>>
 
