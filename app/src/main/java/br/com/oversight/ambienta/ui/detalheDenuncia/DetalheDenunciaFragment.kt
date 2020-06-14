@@ -1,32 +1,39 @@
 package br.com.oversight.ambienta.ui.detalheDenuncia
 
 import android.Manifest
+import android.media.Image
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import br.com.oversight.ambienta.R
 import br.com.oversight.ambienta.databinding.FragmentDetalheDenunciaBinding
 import br.com.oversight.ambienta.di.BaseFragment
 import br.com.oversight.ambienta.di.RequiresViewModel
+import br.com.oversight.ambienta.model.Evidencia
 import br.com.oversight.ambienta.ui.home.DetalheEvidenciasListAdapter
 import br.com.oversight.ambienta.utils.WorkaroundMapFragment
+import coil.Coil
+import coil.api.load
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.stfalcon.imageviewer.StfalconImageViewer
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 
 @RuntimePermissions
 @RequiresViewModel(DetalheDenunciaViewModel::class)
-class DetalheDenunciaFragment : BaseFragment<DetalheDenunciaViewModel>(), OnMapReadyCallback {
+class DetalheDenunciaFragment : BaseFragment<DetalheDenunciaViewModel>(), OnMapReadyCallback,
+    DetalheEvidenciasListAdapter.DetalheEvidenciasActions {
     val args: DetalheDenunciaFragmentArgs by navArgs()
-    val adapter: DetalheEvidenciasListAdapter = DetalheEvidenciasListAdapter()
+    val adapter: DetalheEvidenciasListAdapter = DetalheEvidenciasListAdapter(this)
     lateinit var binding: FragmentDetalheDenunciaBinding
 
     override fun onCreateView(
@@ -85,5 +92,11 @@ class DetalheDenunciaFragment : BaseFragment<DetalheDenunciaViewModel>(), OnMapR
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
+    }
+
+    override fun onClick(element: Evidencia, imageView: AppCompatImageView) {
+        StfalconImageViewer.Builder(requireContext(), mutableListOf(element)){ view, image ->
+            view.load(image.url?.replace("http:", "https:"))
+        }.withTransitionFrom(imageView).show()
     }
 }
