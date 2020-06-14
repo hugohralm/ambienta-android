@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import br.com.oversight.ambienta.R
 import br.com.oversight.ambienta.databinding.FragmentHomeBinding
 import br.com.oversight.ambienta.di.BaseFragment
@@ -15,13 +15,15 @@ import br.com.oversight.ambienta.di.RequiresViewModel
 import br.com.oversight.ambienta.model.Denuncia
 import br.com.oversight.ambienta.service.ApiResult
 import br.com.oversight.ambienta.ui.dialogSearch.BottomSheetSearch
-import br.com.oversight.ambienta.utils.DENUNCIA_PREFERENCES
+import br.com.oversight.ambienta.utils.CodDenunciaHandler
+import br.com.oversight.ambienta.utils.SwipeToDeleteCallback
 import br.com.oversight.ambienta.utils.extensions.showSnack
-import com.orhanobut.hawk.Hawk
-import kotlinx.coroutines.launch
+import com.google.android.material.snackbar.Snackbar
+
 
 @RequiresViewModel(HomeViewModel::class)
-class HomeFragment : BaseFragment<HomeViewModel>(), DenunciaListAdapter.DenunciaCallbacks {
+class HomeFragment : BaseFragment<HomeViewModel>(), DenunciaListAdapter.DenunciaCallbacks,
+    SwipeToDeleteCallback.SwipeActions {
     lateinit var binding: FragmentHomeBinding
     var denunciaListAdapter: DenunciaListAdapter = DenunciaListAdapter(this)
 
@@ -36,6 +38,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), DenunciaListAdapter.Denuncia
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         binding.apply {
             floatingActionButton.setOnClickListener {
                 findNavController().navigate(HomeFragmentDirections.actionNavHomeToPickLocationFragment())
@@ -49,6 +52,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), DenunciaListAdapter.Denuncia
             }
 
             recyclerView.adapter = denunciaListAdapter
+            ItemTouchHelper(SwipeToDeleteCallback(this@HomeFragment, requireContext(), denunciaListAdapter)).attachToRecyclerView(recyclerView)
             swipe.apply {
                 setOnRefreshListener {
                     isRefreshing = false
@@ -79,9 +83,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), DenunciaListAdapter.Denuncia
     }
 
     fun inserirCodigoDenuncia(codigo: String) {
-        val array = Hawk.get<MutableList<String>>(DENUNCIA_PREFERENCES) ?: mutableListOf()
-        array.add(codigo)
-        Hawk.put(DENUNCIA_PREFERENCES, array)
+        CodDenunciaHandler.addCodigo(codigo)
         viewModel?.fetchDenuncias()
     }
 
@@ -91,5 +93,31 @@ class HomeFragment : BaseFragment<HomeViewModel>(), DenunciaListAdapter.Denuncia
                 denuncia
             )
         )
+    }
+
+    override fun onSwipeToLeft(position: Int) {
+        delete(position)
+    }
+
+    override fun onSwipeToRight(position: Int) {
+        delete(position)
+    }
+
+    private fun delete(position: Int) {
+        val denuncia = denunciaListAdapter.getItemAtPosition(position)
+        CodDenunciaHandler.removeCodigo(denuncia.codigoAcompanhamento!!)
+        viewModel?.fetchDenuncias()
+
+        val snackbar: Snackbar = Snackbar.make(
+            binding.root, "Denúncia removida",
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.setAction("Desfazer") { v ->
+            run {
+                CodDenunciaHandler.addCodigo(denuncia.codigoAcompanhamento!!)
+                viewModel?.fetchDenuncias()
+            }
+        }
+        snackbar.show()
     }
 }

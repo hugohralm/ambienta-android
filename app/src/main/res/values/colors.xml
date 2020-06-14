@@ -3,4 +3,6 @@
     <color name="colorPrimary">#2dce89</color>
     <color name="colorPrimaryDark">#00A35D</color>
     <color name="colorAccent">#2dcecc</color>
+
+    <color name="swipeDelete">#DC040C</color>
 </resources>

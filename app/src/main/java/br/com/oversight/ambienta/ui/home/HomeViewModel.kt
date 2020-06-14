@@ -5,9 +5,7 @@ import androidx.lifecycle.ViewModel
 import br.com.oversight.ambienta.model.Denuncia
 import br.com.oversight.ambienta.service.ApiResult
 import br.com.oversight.ambienta.service.DenunciaRepository
-import br.com.oversight.ambienta.service.room.AppDatabase
-import br.com.oversight.ambienta.utils.DENUNCIA_PREFERENCES
-import com.orhanobut.hawk.Hawk
+import br.com.oversight.ambienta.utils.CodDenunciaHandler
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
@@ -20,9 +18,7 @@ class HomeViewModel @Inject constructor(
         }
 
     fun fetchDenuncias() {
-        val array = Hawk.get<MutableList<String>>(DENUNCIA_PREFERENCES) ?: mutableListOf()
-
-        denunciaRepository.listarDenuncias(array).observeForever { request ->
+        denunciaRepository.listarDenuncias(CodDenunciaHandler.getCodigos()).observeForever { request ->
             denunciaList.value = request
         }
     }

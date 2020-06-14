@@ -39,6 +39,7 @@ class DenunciaListAdapter(private val denunciaListener: DenunciaCallbacks) :
         )
     }
 
+    fun getItemAtPosition(position: Int): Denuncia = getItem(position)
 
     class ViewHolder(
         private val listener: DenunciaCallbacks,
