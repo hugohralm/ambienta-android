@@ -1,17 +1,14 @@
-package br.com.oversight.ambienta.ui.home
+package br.com.oversight.ambienta.ui.detalheDenuncia
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.util.StringUtil
 import br.com.oversight.ambienta.databinding.ItemEvidenciaBinding
 import br.com.oversight.ambienta.model.Evidencia
 import br.com.oversight.ambienta.ui.novaDenuncia.EvidenciasListAdapter
 import coil.api.load
 import coil.transform.RoundedCornersTransformation
-import timber.log.Timber
 
 class DetalheEvidenciasListAdapter(val listener: DetalheEvidenciasActions) :
     RecyclerView.Adapter<DetalheEvidenciasListAdapter.ViewHolder>() {

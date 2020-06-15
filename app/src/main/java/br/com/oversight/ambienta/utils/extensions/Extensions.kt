@@ -46,7 +46,7 @@ fun Date.toDateBrFormat(): String{
     return SimpleDateFormat("dd/MM/yyyy").format(this.time)
 }
 fun Date.toDateBrFormatWithHour(): String{
-    return SimpleDateFormat("dd/MM/yyyy 'às' HH:mm").format(this.time)
+    return SimpleDateFormat("dd/MM/yyyy HH:mm").format(this.time)
 }
 fun Date.toCalendar(): Calendar {
     val calendar = Calendar.getInstance()

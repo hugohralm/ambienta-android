@@ -4,6 +4,9 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.Html
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -34,8 +37,13 @@ fun applyMask(view: EditText, mascara: String, mascaraSecundaria: String?) {
 }
 
 @BindingAdapter(value = ["loadImage", "placeHolder", "crossFade"], requireAll = false)
-fun loadImage(imageView: ImageView, url: String?, placeHolder: Drawable?, crossFade: Boolean? = true) {
-    imageView.load(url){
+fun loadImage(
+    imageView: ImageView,
+    url: String?,
+    placeHolder: Drawable?,
+    crossFade: Boolean? = true
+) {
+    imageView.load(url) {
         crossfade(crossFade!!)
         placeholder(placeHolder)
     }
@@ -49,14 +57,16 @@ fun htmlText(view: TextView, text: String) {
 }
 
 @BindingAdapter("imageFromRes")
-fun imageFromRes(view: ImageView,@DrawableRes id: Int) {
+fun imageFromRes(view: ImageView, @DrawableRes id: Int) {
     view.setImageResource(id)
 }
 
-@BindingAdapter(value = ["obsTextColor", "defaultTextColor"], requireAll = false)
-fun setTextColor(view: TextView, textColor: String?, defaultColor: Int) {
-    if (textColor != null) view.setTextColor(Color.parseColor(textColor))
-    else view.setTextColor(defaultColor)
+@BindingAdapter(value = ["obsTextColor", "obsText"])
+fun setTextColor(view: TextView, textColor: String, obsText: String) {
+    val colored = obsText.substringAfter("<color>").substringBefore("</color>")
+    val spannable = SpannableString(obsText.replace("<color>", "").replace("</color>", ""))
+    spannable.setSpan(ForegroundColorSpan(Color.parseColor(textColor)), 0, colored.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+    view.text = spannable
 }
 
 @BindingAdapter("showView")
@@ -82,4 +92,10 @@ fun hideView(view: View, hide: Boolean) {
 @BindingAdapter("check")
 fun check(view: RadioButton, check: Boolean) {
     view.isChecked = check
+}
+
+@BindingAdapter(value = ["obsTextColor", "defaultColor"], requireAll = false)
+fun setColor(view: TextView, textColor: String?, defaultColor: Int) {
+    if (textColor != null) view.setTextColor(Color.parseColor(textColor))
+    else view.setTextColor(defaultColor)
 }

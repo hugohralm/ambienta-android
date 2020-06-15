@@ -6,9 +6,8 @@ import androidx.room.TypeConverters
 import br.com.oversight.ambienta.model.Denuncia
 import br.com.oversight.ambienta.model.TipoCategoria
 
-@Database(entities = [TipoCategoria::class, Denuncia::class], version = 1)
+@Database(entities = [TipoCategoria::class], version = 1)
 @TypeConverters(DataConverter::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun tipoCategoriaDao(): TipoCategoriaDAO
-    abstract fun denunciaDao(): DenunciaDAO
 }

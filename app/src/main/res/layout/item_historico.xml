@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="br.com.oversight.ambienta.utils.extensions.Converter" />
+
+        <variable
+            name="item"
+            type="br.com.oversight.ambienta.model.RespostaDenuncia" />
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            obsTextColor="@{item.status.color}"
+            obsText="@{String.format(`&lt;color&gt;%s %s &lt;/color&gt;- %s`, Converter.dateToDateBrFormatWithHour(item.dataCadastro), item.status.nome, item.descricao)}"
+            tools:text="15/10/20 14:52 CONCLUÍDO - vamos fazer alguma coisa algum dia." />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

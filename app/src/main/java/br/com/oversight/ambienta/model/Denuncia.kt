@@ -35,7 +35,8 @@ data class Denuncia(
     @Ignore
     var longitude: Double? = null,
     @Ignore
-    var evidencias: List<Evidencia> = mutableListOf()
+    var evidencias: List<Evidencia> = mutableListOf(),
+    var respostas: List<RespostaDenuncia> = mutableListOf()
 ): Serializable{
 
     fun clearMask(): Denuncia {
