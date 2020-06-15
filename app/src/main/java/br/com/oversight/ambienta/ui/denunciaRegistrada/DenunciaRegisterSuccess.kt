@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import br.com.oversight.ambienta.databinding.FragmentDenunciaRegisterSuccessBinding
+import br.com.oversight.ambienta.utils.CodDenunciaHandler
 
 
 class DenunciaRegisterSuccess : Fragment() {
@@ -27,6 +28,7 @@ class DenunciaRegisterSuccess : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         this.binding.codigo.text = args.codigo
+        CodDenunciaHandler.addCodigo(args.codigo)
         this.binding.btnOk.setOnClickListener {
             findNavController().navigate(
                 DenunciaRegisterSuccessDirections.actionGlobalNavHome()

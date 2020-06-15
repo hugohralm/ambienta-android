@@ -24,8 +24,7 @@ class DetalheEvidenciasListAdapter(val listener: DetalheEvidenciasActions) :
         holder.apply {
             bind(
                 item,
-                listener,
-                position
+                listener
             )
         }
     }
@@ -52,8 +51,7 @@ class DetalheEvidenciasListAdapter(val listener: DetalheEvidenciasActions) :
 
         fun bind(
             evidencia: Evidencia,
-            listener: DetalheEvidenciasActions,
-            position: Int
+            listener: DetalheEvidenciasActions
         ) {
             binding.apply {
                 binding.root.setOnClickListener {
