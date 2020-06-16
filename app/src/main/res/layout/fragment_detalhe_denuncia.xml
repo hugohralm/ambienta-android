@@ -19,11 +19,70 @@
         android:layout_height="match_parent"
         android:fillViewport="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                htmlText="@{String.format(`&lt;b>Código:&lt;/b> %s`, vm.denuncia.codigoAcompanhamento)}"
+                tools:text="Código: 1DkurCyA"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                tools:text="Titulo: Título denuncia"
+                htmlText="@{String.format(`&lt;b>Titulo:&lt;/b> %s`, Converter.dateToDateBrFormat(vm.denuncia.dataOcorrido))}"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView6"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_height="wrap_content"
+                htmlText="@{String.format(`&lt;b>Status:&lt;/b> %s`, vm.denuncia.status.nome)}"
+                tools:text="Status: Aguardando análise"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView5"
+                htmlText="@{String.format(`&lt;b>Data ocorrido:&lt;/b> %s`, Converter.dateToDateBrFormat(vm.denuncia.dataOcorrido))}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                tools:text="Data ocorrido: 19/05/2020" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView8"
+                htmlText="@{String.format(`&lt;b>Categoria:&lt;/b> %s`, vm.denuncia.categoria.toString())}"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_height="wrap_content"
+                tools:text="Categoria: Animais exóticos" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView7"
+                htmlText="@{String.format(`&lt;b>Descrição:&lt;/b> %s`, vm.denuncia.descricao)}"
+                android:layout_width="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_height="wrap_content"
+                tools:text="Descrição: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Proin vitae placerat nisi. Pellentesque id mollis erat. Ut euismod ullamcorper tincidunt.
+                     Etiam elit ipsum, lacinia sed porttitor et, mattis sed ante." />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Andamento"
+                android:textStyle="bold"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/historicoList"
@@ -32,9 +91,7 @@
                 android:layout_marginTop="8dp"
                 android:overScrollMode="never"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintTop_toBottomOf="@+id/textView12"
                 tools:itemCount="2"
-                tools:layout_editor_absoluteX="16dp"
                 tools:listitem="@layout/item_historico" />
 
             <TextView
@@ -43,173 +100,41 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
+                showView="@{vm.denuncia.evidencias != null &amp;&amp; vm.denuncia.evidencias.size() > 0}"
                 android:text="Evidencias"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@+id/historicoList"
-                tools:layout_editor_absoluteX="16dp" />
+                app:layout_constraintTop_toBottomOf="@+id/historicoList"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                showView="@{vm.denuncia.evidencias != null &amp;&amp; vm.denuncia.evidencias.size() > 0}"
                 android:overScrollMode="never"
-                app:layout_constraintTop_toBottomOf="@+id/textView11"
                 tools:itemCount="1"
-                tools:layout_editor_absoluteX="16dp"
                 tools:listitem="@layout/item_evidencia" />
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/linearLayoutCompat3"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:orientation="vertical">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/materialTextView9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    htmlText="@{String.format(`&lt;b>Código:&lt;/b> %s`, vm.denuncia.codigoAcompanhamento)}"
-                    tools:text="Código: 1DkurCyA"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/linearLayoutCompat7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat3">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/materialTextView4"
+                <fragment
+                    android:id="@+id/map"
+                    android:name="br.com.oversight.ambienta.utils.WorkaroundMapFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="Titulo: Título denuncia"
-                    htmlText="@{String.format(`&lt;b>Titulo:&lt;/b> %s`, Converter.dateToDateBrFormat(vm.denuncia.dataOcorrido))}"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintDimensionRatio="w,1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/materialTextView9" />
+                    app:layout_constraintTop_toTopOf="parent"/>
 
-            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/linearLayoutCompat6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat5">
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/materialTextView5"
-                    htmlText="@{String.format(`&lt;b>Data ocorrido:&lt;/b> %s`, Converter.dateToDateBrFormat(vm.denuncia.dataOcorrido))}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/materialTextView4"
-                    tools:text="Data ocorrido: 19/05/2020" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/linearLayoutCompat5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat7">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/materialTextView6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Status:"
-                    htmlText="@{String.format(`&lt;b>Categoria:&lt;/b> %s`, vm.denuncia.status.nome)}"
-                    tools:text="Status: Aguardando análise"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/materialTextView5" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/linearLayoutCompat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat6">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/materialTextView8"
-                    htmlText="@{String.format(`&lt;b>Categoria:&lt;/b> %s`, vm.denuncia.categoria.toString())}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/materialTextView6"
-                    tools:text="Categoria: Animais exóticos" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/linearLayoutCompat2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/materialTextView7"
-                    htmlText="@{String.format(`&lt;b>Descrição:&lt;/b> %s`, vm.denuncia.descricao)}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/materialTextView8"
-                    tools:text="Descrição: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Proin vitae placerat nisi. Pellentesque id mollis erat. Ut euismod ullamcorper tincidunt.
-                     Etiam elit ipsum, lacinia sed porttitor et, mattis sed ante." />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <fragment
-                android:id="@+id/map"
-                android:name="br.com.oversight.ambienta.utils.WorkaroundMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintDimensionRatio="w,1:1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recycler_view" />
-
-            <TextView
-                android:id="@+id/textView12"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="Andamento"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat2" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
 </layout>
