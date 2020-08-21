@@ -1,12 +1,27 @@
 package br.com.oversight.ambienta.service
 
-import com.google.gson.JsonObject
-import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Path
+import androidx.lifecycle.LiveData
+import br.com.oversight.ambienta.model.Denuncia
+import br.com.oversight.ambienta.model.Evidencia
+import br.com.oversight.ambienta.model.TipoCategoria
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.Response
+import okhttp3.ResponseBody
+import retrofit2.http.*
 
 interface DenunciaService {
 
-    @GET("denuncia/{id}")
-    fun getById(@Path("id") id: String): Call<JsonObject>
+    @GET("api/denuncias/acompanhar")
+    fun getAll(@Query("codigo") codigos: List<String>): LiveData<ApiResult<List<Denuncia>>>
+
+    @POST("api/denuncias")
+    fun create(@Body denuncia: Denuncia): LiveData<ApiResult<Denuncia>>
+
+    @GET("api/tipos-categoria")
+    fun getTipoCategoriaDenuncia(): LiveData<ApiResult<List<TipoCategoria>>>
+
+    @Multipart
+    @POST("api/evidencias")
+    fun postImage(@Part file: MultipartBody.Part, @Part("denuncia_id") id: RequestBody): LiveData<ApiResult<Evidencia>>
 }

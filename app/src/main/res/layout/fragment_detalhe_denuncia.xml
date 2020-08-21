@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="br.com.oversight.ambienta.ui.detalheDenuncia.DetalheDenunciaViewModel" />
+
+        <import type="br.com.oversight.ambienta.utils.extensions.Converter" />
+    </data>
+
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                htmlText="@{String.format(`&lt;b>Código:&lt;/b> %s`, vm.denuncia.codigoAcompanhamento)}"
+                tools:text="Código: 1DkurCyA"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                tools:text="Titulo: Título denuncia"
+                htmlText="@{String.format(`&lt;b>Titulo:&lt;/b> %s`, Converter.dateToDateBrFormat(vm.denuncia.dataOcorrido))}"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView6"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_height="wrap_content"
+                htmlText="@{String.format(`&lt;b>Status:&lt;/b> %s`, vm.denuncia.status.nome)}"
+                tools:text="Status: Aguardando análise"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView5"
+                htmlText="@{String.format(`&lt;b>Data ocorrido:&lt;/b> %s`, Converter.dateToDateBrFormat(vm.denuncia.dataOcorrido))}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                tools:text="Data ocorrido: 19/05/2020" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView8"
+                htmlText="@{String.format(`&lt;b>Categoria:&lt;/b> %s`, vm.denuncia.categoria.toString())}"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_height="wrap_content"
+                tools:text="Categoria: Animais exóticos" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/materialTextView7"
+                htmlText="@{String.format(`&lt;b>Descrição:&lt;/b> %s`, vm.denuncia.descricao)}"
+                android:layout_width="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_height="wrap_content"
+                tools:text="Descrição: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Proin vitae placerat nisi. Pellentesque id mollis erat. Ut euismod ullamcorper tincidunt.
+                     Etiam elit ipsum, lacinia sed porttitor et, mattis sed ante." />
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Andamento"
+                android:textStyle="bold"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/historicoList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:overScrollMode="never"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="2"
+                tools:listitem="@layout/item_historico" />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                showView="@{vm.denuncia.evidencias != null &amp;&amp; vm.denuncia.evidencias.size() > 0}"
+                android:text="Evidencias"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/historicoList"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                showView="@{vm.denuncia.evidencias != null &amp;&amp; vm.denuncia.evidencias.size() > 0}"
+                android:overScrollMode="never"
+                tools:itemCount="1"
+                tools:listitem="@layout/item_evidencia" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <fragment
+                    android:id="@+id/map"
+                    android:name="br.com.oversight.ambienta.utils.WorkaroundMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintDimensionRatio="w,1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

@@ -7,11 +7,14 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-
     <string name="home_second">Home Second</string>
 
     <string name="msg_unavailable_service">Serviço indisponível.\nPor favor, volte mais tarde.</string>
+
+    <string name="menu_home">Minhas denúncias</string>
+    <string name="menu_picklocation">Local da denúncia</string>
+    <string name="menu_nova_denuncia">Nova denuncia</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

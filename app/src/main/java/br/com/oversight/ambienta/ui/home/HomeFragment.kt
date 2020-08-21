@@ -4,52 +4,120 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import br.com.oversight.ambienta.R
-import br.com.oversight.ambienta.model.DenunciaResponse
-import br.com.oversight.ambienta.utils.extensions.makeToast
-import com.google.gson.Gson
-import kotlinx.android.synthetic.main.nav_header_main.*
+import br.com.oversight.ambienta.databinding.FragmentHomeBinding
+import br.com.oversight.ambienta.di.BaseFragment
+import br.com.oversight.ambienta.di.RequiresViewModel
+import br.com.oversight.ambienta.model.Denuncia
+import br.com.oversight.ambienta.service.ApiResult
+import br.com.oversight.ambienta.ui.dialogSearch.BottomSheetSearch
+import br.com.oversight.ambienta.utils.CodDenunciaHandler
+import br.com.oversight.ambienta.utils.SwipeToDeleteCallback
+import br.com.oversight.ambienta.utils.extensions.showSnack
+import com.google.android.material.snackbar.Snackbar
 
-class HomeFragment : Fragment(), HomeView {
 
-    private lateinit var homeViewModel: HomeViewModel
+@RequiresViewModel(HomeViewModel::class)
+class HomeFragment : BaseFragment<HomeViewModel>(), DenunciaListAdapter.DenunciaCallbacks,
+    SwipeToDeleteCallback.SwipeActions {
+    lateinit var binding: FragmentHomeBinding
+    var denunciaListAdapter: DenunciaListAdapter = DenunciaListAdapter(this)
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val textView: TextView = root.findViewById(R.id.text_home)
-        homeViewModel.setProtocol(this)
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        getById("2")
-        return root
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    private fun getById(id: String) {
-        id.let {
-            homeViewModel.getById(id).observe(this, Observer { response ->
-                response.let { resp ->
-                    val denuncia = Gson().fromJson(resp, DenunciaResponse::class.java)
-                    activity!!.makeToast(denuncia.titulo!!)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        binding.apply {
+            floatingActionButton.setOnClickListener {
+                findNavController().navigate(HomeFragmentDirections.actionNavHomeToPickLocationFragment())
+            }
+            floatingActionButtonSearch.setOnClickListener {
+                BottomSheetSearch(object : BottomSheetSearch.BottomSheetSearchActions {
+                    override fun salvar(codigo: String) {
+                        inserirCodigoDenuncia(codigo)
+                    }
+                }).show(childFragmentManager, "searchDialog")
+            }
+
+            recyclerView.adapter = denunciaListAdapter
+            ItemTouchHelper(SwipeToDeleteCallback(this@HomeFragment, requireContext(), denunciaListAdapter)).attachToRecyclerView(recyclerView)
+            swipe.apply {
+                setOnRefreshListener {
+                    isRefreshing = false
+                    viewModel!!.fetchDenuncias()
                 }
-            })
+                setColorSchemeColors(
+                    ContextCompat.getColor(context, R.color.colorPrimary),
+                    ContextCompat.getColor(context, R.color.colorAccent)
+                )
+            }
         }
     }
 
-    override fun responseError(error: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-}
+    override fun bindViewModel(viewModel: HomeViewModel) {
+        binding.apply {
+            vm = viewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
 
-interface HomeView {
-    fun responseError(error: String)
+        viewModel.denunciaList.observe(this, Observer {
+            when (it.status) {
+                ApiResult.Status.STATUS_SUCCESS -> {
+                    denunciaListAdapter.submitList(it.data)
+                }
+                ApiResult.Status.STATUS_ERROR -> showSnack(binding.root, "Erro: ${it.errorMessage}")
+            }
+        })
+    }
+
+    fun inserirCodigoDenuncia(codigo: String) {
+        CodDenunciaHandler.addCodigo(codigo)
+        viewModel?.fetchDenuncias()
+    }
+
+    override fun onItemClick(denuncia: Denuncia, position: Int) {
+        findNavController().navigate(
+            HomeFragmentDirections.actionNavHomeToDetalheDenunciaFragment(
+                denuncia
+            )
+        )
+    }
+
+    override fun onSwipeToLeft(position: Int) {
+        delete(position)
+    }
+
+    override fun onSwipeToRight(position: Int) {
+        delete(position)
+    }
+
+    private fun delete(position: Int) {
+        val denuncia = denunciaListAdapter.getItemAtPosition(position)
+        CodDenunciaHandler.removeCodigo(denuncia.codigoAcompanhamento!!)
+        viewModel?.fetchDenuncias()
+
+        val snackbar: Snackbar = Snackbar.make(
+            binding.root, "Denúncia removida",
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.setAction("Desfazer") { v ->
+            run {
+                CodDenunciaHandler.addCodigo(denuncia.codigoAcompanhamento!!)
+                viewModel?.fetchDenuncias()
+            }
+        }
+        snackbar.show()
+    }
 }

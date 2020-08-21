@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="br.com.oversight.ambienta.utils.extensions.Converter" />
+
+        <variable
+            name="vm"
+            type="br.com.oversight.ambienta.ui.novaDenuncia.NovaDenunciaViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                showView="@{vm.isLoading}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                tools:visibility="gone">
+
+                <ProgressBar
+                    style="@style/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center"
+                    android:text="@{vm.requestDenuncia.statusLoading? `Enviando denuncia...` : `Enviando evidências..(`+ vm.count + `/`+ vm.total + `)`}" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                hideView="@{vm.isLoading}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp">
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/denuncia_anonima_check"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="@={vm.isDenunciaAnonima}"
+                    android:text="Denúncia anonima" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/wrap_denunciante"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        style="@style/headerFields"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Dados do denúnciante" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/input_nome_denunciante"
+                        style="@style/TextInputLayout.Default"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:hint="Nome *">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:inputType="textPersonName"
+                            android:text="@={vm.denuncia.nomeDenunciante}" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/input_cpf_denunciante"
+                        style="@style/TextInputLayout.Default"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:hint="CPF *">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            mascara='@{"[000].[000].[000]-[00]"}'
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:digits="0123456789.-"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:text="@={vm.denuncia.cpfDenunciante}" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/input_email"
+                        style="@style/TextInputLayout.Default"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:hint="E-mail *">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:inputType="textEmailAddress"
+                            android:text="@={vm.denuncia.emailDenunciante}" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/headerFields"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Dados da denúncia" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_nome_denunciado"
+                    style="@style/TextInputLayout.Default"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:hint="Nome do denunciado (opcional)">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapSentences"
+                        android:text="@={vm.denuncia.nomeDenunciado}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_tipo_categoria"
+                    style="@style/InputLayout.Default.ExposedDropDown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:hint="Tipo da categoria *"
+                    app:endIconDrawable="@drawable/ic_arrow_down_black"
+                    app:endIconMode="custom">
+
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/autocomplete_tipo_categoria"
+                        style="@style/AutoCompleteTextView.Default"
+                        android:layout_width="match_parent"
+                        android:editable="false"
+                        android:imeOptions="actionNext"
+                        android:inputType="none"
+                        android:singleLine="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_categoria"
+                    style="@style/InputLayout.Default.ExposedDropDown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:hint="Categoria *"
+                    app:endIconDrawable="@drawable/ic_arrow_down_black"
+                    app:endIconMode="custom">
+
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/autocomplete_categoria"
+                        style="@style/AutoCompleteTextView.Default"
+                        android:layout_width="match_parent"
+                        android:editable="false"
+                        android:imeOptions="actionNext"
+                        android:inputType="none"
+                        android:singleLine="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_data_ocorrido"
+                    style="@style/TextInputLayout.Default"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:hint="Data do ocorrido *">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/data_ocorrido"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:focusableInTouchMode="false"
+                        android:imeOptions="actionNext"
+                        android:inputType="none" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_titulo"
+                    style="@style/TextInputLayout.Default"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:hint="Titulo *">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapSentences"
+                        android:text="@={vm.denuncia.titulo}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_descricao"
+                    style="@style/TextInputLayout.Default"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:hint="Descrição *">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionDone"
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:text="@={vm.denuncia.descricao}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/headerFields"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Anexar evidências" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_photos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/item_evidencia"
+                    tools:itemCount="0"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_send"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Enviar denuncia" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.core.widget.NestedScrollView>
+</layout>

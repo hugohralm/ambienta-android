@@ -1,25 +1,29 @@
 package br.com.oversight.ambienta.service
 
-import br.com.oversight.ambienta.R
-import com.google.gson.JsonObject
-import retrofit2.Call
+import androidx.lifecycle.LiveData
+import br.com.oversight.ambienta.model.Denuncia
+import br.com.oversight.ambienta.model.Evidencia
+import br.com.oversight.ambienta.model.TipoCategoria
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.Response
+import okhttp3.ResponseBody
+import javax.inject.Inject
 
-class DenunciaRepository {
-    private val service = ApplicationController.service
+class DenunciaRepository @Inject constructor(private val denunciaService: DenunciaService) {
+    fun create(denuncia: Denuncia): LiveData<ApiResult<Denuncia>> {
+        return denunciaService.create(denuncia)
+    }
 
-    fun getById(id: String, listener: BaseResponse<JsonObject>) {
-        service.getById(id).enqueue(object : BaseCallback<JsonObject>() {
-            override fun onError(error: String) {
-                listener.onResponseError(error)
-            }
+    fun listarTiposCategorias(): LiveData<ApiResult<List<TipoCategoria>>> {
+        return denunciaService.getTipoCategoriaDenuncia()
+    }
 
-            override fun onSuccess(response: JsonObject?) {
-                listener.onResponseSuccess(response)
-            }
+    fun listarDenuncias(codigos: List<String>): LiveData<ApiResult<List<Denuncia>>> {
+        return denunciaService.getAll(codigos)
+    }
 
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                listener.onResponseError(ApplicationController.resourses.getString(R.string.msg_unavailable_service))
-            }
-        })
+    fun postImage(id: RequestBody, file: MultipartBody.Part): LiveData<ApiResult<Evidencia>> {
+        return denunciaService.postImage(file, id)
     }
 }
